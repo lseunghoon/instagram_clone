@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/Screens/feed_page.dart';
+import 'package:instagram_clone/Screens/feed_screen.dart';
+import 'package:instagram_clone/Screens/profile_screen.dart';
+import 'package:instagram_clone/constants/screen_size.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,13 +30,15 @@ class _HomePageState extends State<HomePage> {
     Container(
       color: Colors.deepPurpleAccent,
     ),
-    Container(
-      color: Colors.cyanAccent,
-    ),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    if (size == null) {
+      size = MediaQuery.of(context).size;
+    }
+
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
