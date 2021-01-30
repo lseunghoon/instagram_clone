@@ -1,10 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/Screens/profile_screen.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
 import 'package:instagram_clone/widgets/avatar.dart';
 import 'package:instagram_clone/widgets/common_size.dart';
 
 class ProfileBody extends StatefulWidget {
+  final Function() onMenuChanged;
+
+  const ProfileBody({Key key, this.onMenuChanged}) : super(key: key);
+
   @override
   _ProfileBodyState createState() => _ProfileBodyState();
 }
@@ -93,7 +98,9 @@ class _ProfileBodyState extends State<ProfileBody> {
         ),
         IconButton(
           icon: Icon(Icons.menu),
-          onPressed: () {},
+          onPressed: () {
+            widget.onMenuChanged();
+          },
         ),
       ],
     );
