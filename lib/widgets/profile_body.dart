@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
+import 'package:instagram_clone/widgets/avatar.dart';
 import 'package:instagram_clone/widgets/common_size.dart';
 
 class ProfileBody extends StatefulWidget {
@@ -8,25 +10,148 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  bool selectedLeft = true;
+  SelectedTab _selectedTab = SelectedTab.left;
+
+  double _leftImagesMargin = 0;
+  double _rightImagesMargin = size.width;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _username(),
-                _userBio(),
-                _editProfileBtn(),
-                _tabButtons(),
-                _selectedIndicator(),
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _appbar(),
+          Expanded(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Padding(
+                        padding: const EdgeInsets.all(common_gap),
+                        child: Row(
+                          children: <Widget>[
+                            Avatar(
+                              size: 80.0,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: common_gap),
+                                child: Table(
+                                  children: [
+                                    TableRow(
+                                      children: [
+                                        _valueText('ㄴㄴㅇㄹㄴ'),
+                                        _valueText('ㄴㅇㄹㄴ'),
+                                        _valueText('ㄴㅇㅉㅈㄴㄴ'),
+                                      ],
+                                    ),
+                                    TableRow(
+                                      children: [
+                                        _labelText('Post'),
+                                        _labelText('Followers'),
+                                        _labelText('Following'),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _username(),
+                      _userBio(),
+                      _editProfileBtn(),
+                      _tabButtons(),
+                      _selectedIndicator(),
+                    ],
+                  ),
+                ),
+                _imagesPager()
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Row _appbar() {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 44.0,
+        ),
+        Expanded(
+          child: Text(
+            'Profile title',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Text _valueText(String value) {
+    return Text(
+      value,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Text _labelText(String value) {
+    return Text(
+      value,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontWeight: FontWeight.w300,
+        fontSize: 11,
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _imagesPager() {
+    return SliverToBoxAdapter(
+      child: Stack(
+        children: [
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: Matrix4.translationValues(_leftImagesMargin, 0, 0),
+            curve: Curves.fastOutSlowIn,
+            child: _images(),
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: Matrix4.translationValues(_rightImagesMargin, 0, 0),
+            curve: Curves.fastOutSlowIn,
+            child: _images(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  GridView _images() {
+    return GridView.count(
+      crossAxisCount: 3,
+      childAspectRatio: 1,
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: List.generate(
+        30,
+        (index) => CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: "http://picsum.photos/id/$index/100/100"),
       ),
     );
   }
@@ -40,7 +165,9 @@ class _ProfileBodyState extends State<ProfileBody> {
       ),
       duration: Duration(milliseconds: 300),
       curve: Curves.fastOutSlowIn,
-      alignment: selectedLeft ? Alignment.centerLeft : Alignment.centerRight,
+      alignment: _selectedTab == SelectedTab.left
+          ? Alignment.centerLeft
+          : Alignment.centerRight,
     );
   }
 
@@ -51,28 +178,45 @@ class _ProfileBodyState extends State<ProfileBody> {
           child: IconButton(
               icon: ImageIcon(
                 AssetImage('assets/images/grid.png'),
-                color: selectedLeft ? Colors.black : Colors.black26,
+                color: _selectedTab == SelectedTab.left
+                    ? Colors.black
+                    : Colors.black26,
               ),
               onPressed: () {
-                setState(() {
-                  selectedLeft = true;
-                });
+                _tabSelected(SelectedTab.left);
               }),
         ),
         Expanded(
           child: IconButton(
               icon: ImageIcon(
                 AssetImage('assets/images/saved.png'),
-                color: selectedLeft ? Colors.black26 : Colors.black,
+                color: _selectedTab == SelectedTab.left
+                    ? Colors.black26
+                    : Colors.black,
               ),
               onPressed: () {
-                setState(() {
-                  selectedLeft = false;
-                });
+                _tabSelected(SelectedTab.right);
               }),
         )
       ],
     );
+  }
+
+  _tabSelected(SelectedTab selectedTab) {
+    setState(() {
+      switch (selectedTab) {
+        case SelectedTab.left:
+          _selectedTab = SelectedTab.left;
+          _leftImagesMargin = 0;
+          _rightImagesMargin = size.width;
+          break;
+        case SelectedTab.right:
+          _selectedTab = SelectedTab.right;
+          _leftImagesMargin = -size.width;
+          _rightImagesMargin = 0;
+          break;
+      }
+    });
   }
 }
 
@@ -118,3 +262,5 @@ Widget _userBio() {
     ),
   );
 }
+
+enum SelectedTab { left, right }
