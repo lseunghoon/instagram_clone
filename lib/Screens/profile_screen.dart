@@ -3,7 +3,7 @@ import 'package:instagram_clone/widgets/profile_body.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
 import 'package:instagram_clone/widgets/profile_side_menu.dart';
 
-const duration = Duration(milliseconds: 300);
+const duration = Duration(milliseconds: 1000);
 
 class ProfileScreen extends StatefulWidget {
   @override
