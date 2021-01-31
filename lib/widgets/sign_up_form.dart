@@ -44,6 +44,9 @@ class _SignUpFormState extends State<SignUpForm> {
               controller: _emailController,
               decoration: _inputTextDeco('Email'),
             ),
+            SizedBox(
+              height: common_xs_gap,
+            ),
             TextFormField(
               validator: (text) {
                 if (text.isNotEmpty && text.length > 5) {
@@ -54,6 +57,11 @@ class _SignUpFormState extends State<SignUpForm> {
               },
               controller: _pwController,
               decoration: _inputTextDeco('Password'),
+              cursorColor: Colors.black54,
+              obscureText: true,
+            ),
+            SizedBox(
+              height: common_xs_gap,
             ),
             TextFormField(
               validator: (text) {
@@ -65,7 +73,24 @@ class _SignUpFormState extends State<SignUpForm> {
               },
               controller: _cpwController,
               decoration: _inputTextDeco('Confirm Password'),
+              cursorColor: Colors.black54,
+              obscureText: true,
             ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              color: Colors.blue,
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  print('성공');
+                }
+              },
+              child: Text(
+                'Join',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
           ],
         ),
       ),
@@ -77,7 +102,15 @@ class _SignUpFormState extends State<SignUpForm> {
       filled: true,
       fillColor: Colors.grey[100],
       hintText: hint,
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(common_s_gap),
+        borderSide: BorderSide(color: Colors.redAccent),
+      ),
       enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(common_s_gap),
+        borderSide: BorderSide(color: Colors.grey[300]),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(common_s_gap),
         borderSide: BorderSide(color: Colors.grey[300]),
       ),
