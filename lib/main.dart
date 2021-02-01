@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/Screens/auth_screen.dart';
+import 'package:instagram_clone/home_page.dart';
 import 'constants/material_white.dart';
 
 void main() {
@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: white,
       ),
-      home: AuthScreen(),
-      // home: HomePage(),
+      home: HomePage(),
     );
   }
 }

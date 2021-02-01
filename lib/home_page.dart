@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/Screens/camera_screen.dart';
 import 'package:instagram_clone/Screens/feed_screen.dart';
 import 'package:instagram_clone/Screens/profile_screen.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
@@ -56,8 +57,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onBottomItemClick(index) {
-    setState(() {
-      selectedIndex = index;
-    });
+    switch (index) {
+      case 2:
+        _openCamera();
+        break;
+      default:
+        setState(() {
+          selectedIndex = index;
+        });
+    }
+  }
+
+  void _openCamera() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(),
+      ),
+    );
   }
 }
