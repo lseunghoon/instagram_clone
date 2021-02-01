@@ -44,12 +44,24 @@ class _TakePhotoState extends State<TakePhoto> {
 
   Widget _getPreview(List<CameraDescription> cameras) {
     _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-    _cameraController.initialize();
+
     return FutureBuilder(
       future: _cameraController.initialize(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return CameraPreview(_cameraController);
+          return ClipRect(
+            child: OverflowBox(
+              alignment: Alignment.center,
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Container(
+                  width: size.width,
+                  height: size.width * _cameraController.value.aspectRatio,
+                  child: CameraPreview(_cameraController),
+                ),
+              ),
+            ),
+          );
         } else {
           return MyProgressIndicator();
         }
