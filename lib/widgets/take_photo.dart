@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/Screens/share_post_screen.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
 import 'package:camera/camera.dart';
 import 'package:instagram_clone/models/camera_state.dart';
@@ -38,7 +41,8 @@ class _TakePhotoState extends State<TakePhoto> {
                 shape: CircleBorder(),
                 borderSide: BorderSide(color: Colors.black12, width: 20),
                 onPressed: () {
-                  if (cameraState.readyTakePhoto) _attempTakePhoto();
+                  if (cameraState.readyTakePhoto)
+                    _attempTakePhoto(cameraState, context);
                 },
               ),
             ),
@@ -64,12 +68,21 @@ class _TakePhotoState extends State<TakePhoto> {
     );
   }
 
-  void _attempTakePhoto(CameraState cameraState) async {
+  void _attempTakePhoto(CameraState cameraState, BuildContext context) async {
     final String timeInMilli = DateTime.now().millisecondsSinceEpoch.toString();
     try {
-      final path =
-          join((await getTemporaryDirectory()).path, '$timeInMilli.png');
+      final path = join(
+        (await getTemporaryDirectory()).path,
+        '$timeInMilli.png',
+      );
       await cameraState.cameraController.takePicture(path);
+
+      File imageFile = File(path);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => SharePostScreen(imageFile),
+        ),
+      );
     } catch (e) {}
   }
 }
