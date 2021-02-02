@@ -60,7 +60,7 @@ class _TakePhotoState extends State<TakePhoto> {
           fit: BoxFit.fitWidth,
           child: Container(
             width: size.width,
-            height: size.width * cameraState.cameraController.value.aspectRatio,
+            height: size.width / cameraState.cameraController.value.aspectRatio,
             child: CameraPreview(cameraState.cameraController),
           ),
         ),
