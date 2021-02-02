@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/profile_screen.dart';
+import 'package:instagram_clone/models/camera_state.dart';
 import 'package:instagram_clone/widgets/take_photo.dart';
 
 class CameraScreen extends StatefulWidget {
+  CameraState _cameraState = CameraState();
+
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  _CameraScreenState createState() {
+    _cameraState.getReadyToTakePhoto();
+    return _CameraScreenState();
+  }
 }
 
 class _CameraScreenState extends State<CameraScreen> {
