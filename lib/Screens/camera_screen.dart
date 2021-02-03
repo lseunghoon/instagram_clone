@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/profile_screen.dart';
 import 'package:instagram_clone/models/camera_state.dart';
+import 'package:instagram_clone/models/gallery_state.dart';
+import 'package:instagram_clone/widgets/my_gallery.dart';
 import 'package:instagram_clone/widgets/take_photo.dart';
 import 'package:provider/provider.dart';
 
 class CameraScreen extends StatefulWidget {
   CameraState _cameraState = CameraState();
+  GalleryState _galleryState = GalleryState();
 
   @override
   _CameraScreenState createState() {
     _cameraState.getReadyToTakePhoto();
+    _galleryState.initProvider();
     return _CameraScreenState();
   }
 }
@@ -35,6 +39,7 @@ class _CameraScreenState extends State<CameraScreen> {
       //여기에 멀티프로바이더를 주면 scaffold 안에서는 전부 프로바이더 사용 가능.
       providers: [
         ChangeNotifierProvider<CameraState>.value(value: widget._cameraState),
+        ChangeNotifierProvider<GalleryState>.value(value: widget._galleryState),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -44,9 +49,7 @@ class _CameraScreenState extends State<CameraScreen> {
         body: PageView(
           controller: _pageController,
           children: <Widget>[
-            Container(
-              color: Colors.cyanAccent,
-            ),
+            MyGallery(),
             TakePhoto(),
             Container(
               color: Colors.yellowAccent,

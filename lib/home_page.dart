@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/camera_screen.dart';
@@ -96,8 +98,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> checkIfPermissionGranted(BuildContext context) async {
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.camera, Permission.microphone].request();
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+      Platform.isAndroid ? Permission.storage : Permission.photos
+    ].request();
     bool permitted = true;
 
     statuses.forEach((permission, permissionStatus) {
