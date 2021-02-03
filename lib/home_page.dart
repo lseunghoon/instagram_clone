@@ -1,5 +1,4 @@
-import 'dart:html';
-
+import 'dart:io' show Platform;
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/camera_screen.dart';
@@ -101,7 +100,8 @@ class _HomePageState extends State<HomePage> {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.camera,
       Permission.microphone,
-      Platform.isAndroid ? Permission.storage : Permission.photos
+      Permission.storage,
+      Permission.photos
     ].request();
     bool permitted = true;
 
