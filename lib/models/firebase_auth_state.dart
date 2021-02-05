@@ -21,13 +21,33 @@ class FirebaseAuthState extends ChangeNotifier {
     });
   }
 
-  void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
+  void changeFirebaseAuthStatus({FirebaseAuthStatus firebaseAuthStatus}) {
     if (firebaseAuthStatus != null) {
       _firebaseAuthStatus = firebaseAuthStatus;
     } else if (_user != null) {
       _firebaseAuthStatus = FirebaseAuthStatus.signin;
     } else {
       _firebaseAuthStatus = FirebaseAuthStatus.signout;
+    }
+    notifyListeners();
+  }
+
+  void registerUser({@required String email, @required String password}) {
+    _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  void signIn({@required String email, @required String password}) {
+    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  void signOut() {
+    _firebaseAuthStatus = FirebaseAuthStatus.signout;
+    if (_user != null) {
+      _user = null;
+      _firebaseAuth.signOut();
+    } else {
+      print('not good');
     }
     notifyListeners();
   }

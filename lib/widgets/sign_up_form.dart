@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/constants/auth_input_deco.dart';
 import 'package:instagram_clone/home_page.dart';
+import 'package:instagram_clone/models/firebase_auth_state.dart';
 import 'package:instagram_clone/widgets/common_size.dart';
 import 'package:instagram_clone/widgets/or_divider.dart';
+import 'package:provider/provider.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -112,11 +114,8 @@ class _SignUpFormState extends State<SignUpForm> {
       color: Colors.blue,
       onPressed: () {
         if (_formKey.currentState.validate()) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ),
-          );
+          Provider.of<FirebaseAuthState>(context, listen: false).registerUser(
+              email: _emailController.text, password: _pwController.text);
         }
       },
       child: Text(
