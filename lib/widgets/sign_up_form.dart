@@ -115,7 +115,9 @@ class _SignUpFormState extends State<SignUpForm> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           Provider.of<FirebaseAuthState>(context, listen: false).registerUser(
-              email: _emailController.text, password: _pwController.text);
+              context,
+              email: _emailController.text,
+              password: _pwController.text);
         }
       },
       child: Text(

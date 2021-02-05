@@ -32,13 +32,69 @@ class FirebaseAuthState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void registerUser({@required String email, @required String password}) {
-    _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+  void registerUser(BuildContext context,
+      {@required String email, @required String password}) {
+    _firebaseAuth
+        //이메일과 패스워드 뒤에 trim() 을 추가하면 띄어쓰기를 무시 가능.
+        .createUserWithEmailAndPassword(
+            email: email.trim(), password: password.trim())
+        .catchError((error) {
+      print(error);
+      String _message = '';
+      switch (error.code) {
+        case 'email-already-in-use':
+          _message = '이미 사용하고 있는 이메일입니다.';
+          break;
+        case 'invalid-email':
+          _message = '사용할 수 없는 이메일입니다.';
+          break;
+        case 'operation-not-allowed':
+          _message = '활성화되지 않은 사용자입니다.';
+          break;
+        case 'weak-password':
+          _message = '비밀번호의 보안수준이 낮습니다.';
+          break;
+      }
+      //Snackbar로 오류 메세지 전달 가능.
+      SnackBar snackBar = SnackBar(
+        content: Text(_message),
+      );
+
+      //Scaffold.of(context)의 context는 Scaffold 아래에 있는것이어야한다. 거슬러 올라가보면 알 수 있음.
+      Scaffold.of(context).showSnackBar(snackBar);
+    });
   }
 
-  void signIn({@required String email, @required String password}) {
-    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  void signIn(BuildContext context,
+      {@required String email, @required String password}) {
+    _firebaseAuth
+        .signInWithEmailAndPassword(
+            email: email.trim(), password: password.trim())
+        .catchError((error) {
+      print(error);
+      String _message = '';
+      switch (error.code) {
+        case 'invalid-email':
+          _message = '사용할 수 없는 이메일입니다.';
+          break;
+        case 'user-disabled':
+          _message = '해당 사용자는 비활성화 상태입니다.';
+          break;
+        case 'user-not-found':
+          _message = '없는 이메일 입니다.';
+          break;
+        case 'wrong-password':
+          _message = '비밀번호가 틀렸습니다.';
+          break;
+      }
+      //Snackbar로 오류 메세지 전달 가능.
+      SnackBar snackBar = SnackBar(
+        content: Text(_message),
+      );
+
+      //Scaffold.of(context)의 context는 Scaffold 아래에 있는것이어야한다. 거슬러 올라가보면 알 수 있음.
+      Scaffold.of(context).showSnackBar(snackBar);
+    });
   }
 
   void signOut() {
