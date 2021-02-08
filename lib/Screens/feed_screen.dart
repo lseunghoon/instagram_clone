@@ -26,16 +26,12 @@ class FeedScreen extends StatelessWidget {
                 icon: ImageIcon(
                   AssetImage('assets/images/actionbar_camera.png'),
                 ),
-                onPressed: () {
-                  userNetworkRepository.sendData();
-                }),
+                onPressed: () {}),
             IconButton(
                 icon: ImageIcon(
                   AssetImage('assets/images/direct_message.png'),
                 ),
-                onPressed: () {
-                  userNetworkRepository.getData();
-                })
+                onPressed: () {})
           ],
         ),
       ),

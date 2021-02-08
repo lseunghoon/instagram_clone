@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:instagram_clone/repo/user_network_repo.dart';
 import 'package:instagram_clone/utils/simple_snackbar.dart';
 
 class FirebaseAuthState extends ChangeNotifier {
@@ -38,10 +39,10 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   void registerUser(BuildContext context,
-      {@required String email, @required String password}) {
+      {@required String email, @required String password}) async {
     changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
 
-    _firebaseAuth
+    UserCredential userCredential = await _firebaseAuth
         //이메일과 패스워드 뒤에 trim() 을 추가하면 띄어쓰기를 무시 가능.
         .createUserWithEmailAndPassword(
             email: email.trim(), password: password.trim())
@@ -61,6 +62,8 @@ class FirebaseAuthState extends ChangeNotifier {
         case 'weak-password':
           _message = '비밀번호의 보안수준이 낮습니다.';
           break;
+        case 'The email address is badly formatted.':
+          _message = '이메일 양식이 잘못됐습니다.';
       }
       //Snackbar로 오류 메세지 전달 가능.
       SnackBar snackBar = SnackBar(
@@ -70,6 +73,19 @@ class FirebaseAuthState extends ChangeNotifier {
       //Scaffold.of(context)의 context는 Scaffold 아래에 있는것이어야한다. 거슬러 올라가보면 알 수 있음.
       Scaffold.of(context).showSnackBar(snackBar);
     });
+
+    //auth 에서 유저의 토큰(키)값을 받아와서 firestore에 저장
+    User user = userCredential.user;
+    if (user == null) {
+      SnackBar snackBar = SnackBar(
+        content: Text('실패'),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    } else {
+      //firestore로 데이터 보내기
+      await userNetworkRepository.attempCreateUser(
+          userKey: user.uid, email: user.email);
+    }
   }
 
   void signIn(BuildContext context,
