@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/auth_screen.dart';
 import 'package:instagram_clone/home_page.dart';
 import 'package:instagram_clone/models/firebase_auth_state.dart';
+import 'package:instagram_clone/models/firestore/user_model.dart';
+import 'package:instagram_clone/models/user_model_state.dart';
+import 'package:instagram_clone/repo/user_network_repo.dart';
 import 'package:instagram_clone/widgets/my_progress_indicator.dart';
 import 'package:provider/provider.dart';
 import 'constants/material_white.dart';
@@ -20,8 +23,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _firebaseAuthState.watchAuthChange();
-    return ChangeNotifierProvider<FirebaseAuthState>.value(
-      value: _firebaseAuthState,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FirebaseAuthState>.value(
+            value: _firebaseAuthState),
+        ChangeNotifierProvider<UserModelState>(
+          create: (_) => UserModelState(),
+        ),
+      ],
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: white,
@@ -34,6 +43,12 @@ class MyApp extends StatelessWidget {
                 _currentWidget = AuthScreen();
                 break;
               case FirebaseAuthStatus.signin:
+                userNetworkRepository
+                    .getUserModelStream(firebaseAuthState.user.uid)
+                    .listen((userModel) {
+                  Provider.of<UserModelState>(context, listen: false)
+                      .userModel = userModel;
+                });
                 _currentWidget = HomePage();
                 break;
               default:

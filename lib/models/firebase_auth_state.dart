@@ -75,8 +75,8 @@ class FirebaseAuthState extends ChangeNotifier {
     });
 
     //auth 에서 유저의 토큰(키)값을 받아와서 firestore에 저장
-    User user = userCredential.user;
-    if (user == null) {
+    _user = userCredential.user;
+    if (_user == null) {
       SnackBar snackBar = SnackBar(
         content: Text('실패'),
       );
@@ -84,7 +84,7 @@ class FirebaseAuthState extends ChangeNotifier {
     } else {
       //firestore로 데이터 보내기
       await userNetworkRepository.attempCreateUser(
-          userKey: user.uid, email: user.email);
+          userKey: _user.uid, email: _user.email);
     }
   }
 
@@ -176,6 +176,7 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   FirebaseAuthStatus get firebaseAuthStatus => _firebaseAuthStatus;
+  User get user => _user;
 }
 
 enum FirebaseAuthStatus { signout, progress, signin }

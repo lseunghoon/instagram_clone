@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/Screens/profile_screen.dart';
 import 'package:instagram_clone/constants/screen_size.dart';
+import 'package:instagram_clone/models/user_model_state.dart';
 import 'package:instagram_clone/widgets/avatar.dart';
 import 'package:instagram_clone/widgets/common_size.dart';
+import 'package:provider/provider.dart';
 
 class ProfileBody extends StatefulWidget {
   final Function() onMenuChanged;
@@ -83,7 +85,7 @@ class _ProfileBodyState extends State<ProfileBody>
                           ],
                         ),
                       ),
-                      _username(),
+                      _username(context),
                       _userBio(),
                       _editProfileBtn(),
                       _tabButtons(),
@@ -272,11 +274,12 @@ Padding _editProfileBtn() {
   );
 }
 
-Widget _username() {
+Widget _username(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: common_gap),
     child: Text(
-      'username',
+      // 'sdsf',
+      Provider.of<UserModelState>(context).userModel.username,
       style: TextStyle(fontWeight: FontWeight.bold),
     ),
   );

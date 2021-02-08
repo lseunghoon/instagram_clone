@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:instagram_clone/constants/firestore_keys.dart';
 import 'package:instagram_clone/models/firestore/user_model.dart';
+import 'package:instagram_clone/repo/helper/transformers.dart';
 
-class UserNetworkRepository {
+class UserNetworkRepository with Transformers {
   Future<void> attempCreateUser({String userKey, String email}) async {
     final DocumentReference userRef =
         FirebaseFirestore.instance.collection(COLLECTION_USERS).doc(userKey);
@@ -18,7 +19,8 @@ class UserNetworkRepository {
     return FirebaseFirestore.instance
         .collection(COLLECTION_USERS)
         .doc(userKey)
-        .snapshots();
+        .snapshots()
+        .transform(toUser);
   }
 // //data 넣기
   // Future<void> sendData() {
