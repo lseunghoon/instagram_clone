@@ -275,11 +275,13 @@ Padding _editProfileBtn() {
 }
 
 Widget _username(BuildContext context) {
+  var userModel = Provider.of<UserModelState>(context).userModel;
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: common_gap),
     child: Text(
       // 'sdsf',
-      Provider.of<UserModelState>(context).userModel.username,
+      // Provider.of<UserModelState>(context).userModel.username,
+      userModel == null ? "없음" : userModel.username,
       style: TextStyle(fontWeight: FontWeight.bold),
     ),
   );

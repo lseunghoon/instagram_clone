@@ -8,6 +8,7 @@ class UserModelState extends ChangeNotifier {
 
   //값 변경될때마다 알려주는 역할.
   set userModel(UserModel userModel) {
+    _userModel = userModel;
     notifyListeners();
   }
 }
